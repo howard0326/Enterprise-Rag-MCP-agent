@@ -1,0 +1,59 @@
+# =============================================================================
+# 企业级 RAG + MCP 智能助手 —— Python 依赖
+# Python >= 3.10（代码使用 X | None 类型语法 与 match 语句）
+# 安装：python -m venv .venv && .venv\Scripts\activate && pip install -r requirements.txt
+# =============================================================================
+
+# ---- Web 服务 ----
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+sse-starlette>=2.1.0
+python-multipart>=0.0.9
+
+# ---- 配置与数据校验 ----
+pydantic>=2.8.0
+pydantic-settings>=2.4.0
+pyyaml>=6.0.1
+python-dotenv>=1.0.1
+
+# ---- 向量库 ----
+qdrant-client>=1.11.0
+
+# ---- Agent 编排 ----
+langgraph>=0.2.20
+langchain-core>=0.3.0
+
+# ---- MCP 协议 ----
+mcp>=1.2.0
+
+# ---- 文档解析 ----
+pypdf>=5.0.0
+
+# ---- 嵌入模型（本地推理通道；若仅用远程 embedding API 可删除本段）----
+# 【版本约束有实测依据，不要放开上限】
+#   本环境实测组合：sentence-transformers 5.7.0 + transformers 4.57.6 + torch 2.14.0
+#   失败组合：
+#     * transformers 5.17.0 + sentence-transformers 6.1.0
+#       → 报 "Pooling.__init__() missing 1 required positional argument:
+#          'embedding_dimension'"。原因是 transformers 5.x 把模型维度移到
+#          get_text_config()，而 ST 6.x 仍从顶层 hidden_size 读取，维度传空。
+#     * sentence-transformers 6.1.0 独立出现该问题（6.x 依赖 transformers 5.x）。
+sentence-transformers>=5.0,<6.0
+transformers>=4.44,<5.0
+torch>=2.2
+numpy>=1.26.0
+
+# ---- HTTP 客户端（远程 embedding / LLM 调用）----
+httpx>=0.27.0
+
+# ---- 评测与数据分析 ----
+pandas>=2.2.0
+tabulate>=0.9.0
+
+# ---- 测试 ----
+pytest>=8.2.0
+pytest-asyncio>=0.23.0
+
+# ---- 开发工具 ----
+ruff>=0.5.0
+mypy>=1.10.0

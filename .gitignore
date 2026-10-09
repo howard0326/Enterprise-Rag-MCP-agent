@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# 密钥与本地环境
+.env
+
+# 求职材料（个人文件，勿提交）
+RESUME.md
+RESUME_PROJECT.md
+TRAINING_GUIDE.md
+
+# 运行时产物
+logs/
+.data/
+.state/
+.cache/
+.tmp/
+*.db
+*.sqlite3
+
+# IDE
+.idea/
+.vscode/

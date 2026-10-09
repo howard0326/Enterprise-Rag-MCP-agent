@@ -1,0 +1,202 @@
+{
+  "meta": {
+    "version": "1.0",
+    "total": 20,
+    "description": "企业级 RAG + MCP 智能助手评测用例。覆盖四类意图：纯知识问答、纯数据查询、混合问题、操作请求。",
+    "field_notes": {
+      "input": "用户输入原文",
+      "expected_intent": "期望的意图集合（子集匹配：Agent 识别出的意图需包含这些项）",
+      "expected_tool": "期望调用的 MCP 工具集合（子集匹配，空数组表示不要求调用工具）",
+      "expected_contains": "期望回答中出现的关键内容（任一命中即算通过），取自 docs/ 演示语料的真实数值",
+      "category": "用例分类，用于分组统计",
+      "notes": "出题依据与判定说明"
+    },
+    "data_dependencies": {
+      "knowledge_base": "docs/ 下 3 篇文档（退货政策 / 工单规范 / 订单字段说明）",
+      "business_db": "7 条演示订单：ORD-001~ORD-007，客户 CUST-1001/1002/1003",
+      "main_story": "ORD-001 属 CUST-1001，状态 delivered，签收 2025-03-05"
+    }
+  },
+  "cases": [
+    {
+      "id": "KB-01",
+      "category": "knowledge_qa",
+      "input": "退货政策是什么？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["7 个自然日", "无理由退货", "签收"],
+      "notes": "政策主旨问题，答案必须给出具体天数才有业务价值"
+    },
+    {
+      "id": "KB-02",
+      "category": "knowledge_qa",
+      "input": "无理由退货的期限是多久？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["7 个自然日", "15 个自然日"],
+      "notes": "标准商品 7 天、大件 15 天，两个数值都要能答"
+    },
+    {
+      "id": "KB-03",
+      "category": "knowledge_qa",
+      "input": "退款一般多久到账？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["3~5 个工作日", "质检", "工作日"],
+      "notes": "考察能否答出分环节时效表"
+    },
+    {
+      "id": "KB-04",
+      "category": "knowledge_qa",
+      "input": "工单优先级 urgent 的响应时限是多久？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["15 分钟", "urgent", "4 小时"],
+      "notes": "表格类答案，考察结构化数值提取"
+    },
+    {
+      "id": "KB-05",
+      "category": "knowledge_qa",
+      "input": "创建工单必须填写哪些信息？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["标题", "描述", "优先级"],
+      "notes": "三项必填字段，漏一项即业务不可用"
+    },
+    {
+      "id": "KB-06",
+      "category": "knowledge_qa",
+      "input": "哪些商品不支持退货？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["定制", "数字", "拆封"],
+      "notes": "排除条款类问题，考察召回完整性"
+    },
+    {
+      "id": "KB-07",
+      "category": "knowledge_qa",
+      "input": "已签收的订单要退货应该走什么流程？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["退货申请", "delivered", "签收"],
+      "notes": "流程类问题，正确答案是走退货申请而非改单"
+    },
+    {
+      "id": "KB-08",
+      "category": "knowledge_qa",
+      "input": "退款率是怎么计算的？",
+      "expected_intent": ["knowledge_qa"],
+      "expected_tool": ["search_documents"],
+      "expected_contains": ["refunded", "退款率", "订单"],
+      "notes": "口径类问题，考察能否给出公式"
+    },
+    {
+      "id": "DB-01",
+      "category": "data_query",
+      "input": "查一下 CUST-1001 的所有订单。",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["ORD-001", "ORD-002", "ORD-007"],
+      "notes": "CUST-1001 共 3 条订单，考察列表完整性"
+    },
+    {
+      "id": "DB-02",
+      "category": "data_query",
+      "input": "订单 ORD-001 现在是什么状态？",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["delivered", "ORD-001", "签收"],
+      "notes": "主线订单，状态必须答对"
+    },
+    {
+      "id": "DB-03",
+      "category": "data_query",
+      "input": "ORD-001 的订单金额是多少？",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["299", "CNY"],
+      "notes": "金额类问题，数值必须准确"
+    },
+    {
+      "id": "DB-04",
+      "category": "data_query",
+      "input": "CUST-1002 有哪些订单？",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["ORD-003", "ORD-004"],
+      "notes": "CUST-1002 共 2 条：refunded 与 pending"
+    },
+    {
+      "id": "DB-05",
+      "category": "data_query",
+      "input": "CUST-1001 在 2025 年 3 月的订单有哪些？",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["ORD-001", "ORD-002"],
+      "notes": "日期过滤，正确结果不含 1 月的 ORD-007"
+    },
+    {
+      "id": "DB-06",
+      "category": "data_query",
+      "input": "哪些订单已经退款了？",
+      "expected_intent": ["data_query"],
+      "expected_tool": ["query_orders"],
+      "expected_contains": ["refunded", "ORD-003", "ORD-007"],
+      "notes": "状态聚合类问题，演示库中 ORD-003 与 ORD-007 为 refunded"
+    },
+    {
+      "id": "MIX-01",
+      "category": "mixed",
+      "input": "订单 ORD-001 符合退货政策吗？",
+      "expected_intent": ["data_query", "knowledge_qa"],
+      "expected_tool": ["query_orders", "search_documents"],
+      "expected_contains": ["delivered", "7 个自然日", "签收"],
+      "notes": "混合意图核心用例：需同时取订单事实与政策条款才能回答"
+    },
+    {
+      "id": "MIX-02",
+      "category": "mixed",
+      "input": "ORD-001 已经签收了，我还能退货吗？需要满足什么条件？",
+      "expected_intent": ["data_query", "knowledge_qa"],
+      "expected_tool": ["query_orders", "search_documents"],
+      "expected_contains": ["退货申请", "包装", "发票"],
+      "notes": "事实 + 条件双重要求，考察两步编排"
+    },
+    {
+      "id": "MIX-03",
+      "category": "mixed",
+      "input": "CUST-1003 的订单里有没有在退货期限内的？",
+      "expected_intent": ["data_query", "knowledge_qa"],
+      "expected_tool": ["query_orders", "search_documents"],
+      "expected_contains": ["CUST-1003", "ORD-005", "个自然日"],
+      "notes": "需要用政策期限去判断订单，典型的推理型混合问题"
+    },
+    {
+      "id": "ACT-01",
+      "category": "action_request",
+      "input": "帮我给订单 ORD-001 创建一个高优先级工单，退款一直没到账。",
+      "expected_intent": ["action_request"],
+      "expected_tool": ["create_ticket", "query_orders"],
+      "expected_contains": ["TKT-", "high", "ORD-001"],
+      "notes": "写操作：必须真正建单并返回工单号，优先级需为 high"
+    },
+    {
+      "id": "ACT-02",
+      "category": "action_request",
+      "input": "客户反馈 ORD-004 一直没发货，麻烦建个紧急工单催一下。",
+      "expected_intent": ["action_request"],
+      "expected_tool": ["create_ticket", "query_orders"],
+      "expected_contains": ["TKT-", "urgent", "ORD-004"],
+      "notes": "\"紧急\"必须映射为 urgent，不能被降级为 medium"
+    },
+    {
+      "id": "ACT-03",
+      "category": "action_request",
+      "input": "请为 CUST-1002 的订单问题登记一个工单。",
+      "expected_intent": ["action_request"],
+      "expected_tool": ["create_ticket"],
+      "expected_contains": ["TKT-", "CUST-1002"],
+      "notes": "未指定优先级，应默认 medium 并成功建单"
+    }
+  ]
+}

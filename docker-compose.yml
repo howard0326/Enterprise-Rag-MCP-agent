@@ -1,0 +1,26 @@
+# 仅用于本地拉起 Qdrant（阶段2索引与阶段3检索的依赖服务）
+# 启动：docker compose up -d qdrant
+# 控制台：http://localhost:6333/dashboard
+#
+# 注意：若本机没有 Docker（本项目当前环境即如此），改用 Windows 单文件二进制：
+#   1) 下载 https://github.com/qdrant/qdrant/releases → qdrant-x86_64-pc-windows-msvc.zip
+#   2) 解压到 D:\projects\.tools\qdrant\
+#   3) pwsh -File scripts\start_qdrant.ps1
+#   两种方式都监听 localhost:6333，config/settings.yaml 无需改动。
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    container_name: enterprise-rag-qdrant
+    restart: unless-stopped
+    ports:
+      - "6333:6333" # REST / Dashboard
+      - "6334:6334" # gRPC
+    volumes:
+      - ./qdrant_storage:/qdrant/storage
+    environment:
+      QDRANT__SERVICE__GRPC_PORT: 6334
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c ':> /dev/tcp/127.0.0.1/6333' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

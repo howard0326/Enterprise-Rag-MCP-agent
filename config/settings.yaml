@@ -1,0 +1,185 @@
+# =============================================================================
+# 企业级 RAG + MCP 智能助手 —— 全局配置
+# -----------------------------------------------------------------------------
+# 约定：
+#   1. 字符串支持 ${ENV_VAR} 与 ${ENV_VAR:-默认值} 两种占位语法，由
+#      config/config_loader.py 在加载时做环境变量替换。
+#   2. 所有相对路径均相对于【项目根目录】，不是相对于本文件所在目录。
+#   3. 本文件是唯一的配置真源（single source of truth），backend / mcp_servers /
+#      rag_pipeline / eval 四个模块全部通过 config_loader 读取，禁止各自硬编码。
+# =============================================================================
+
+project:
+  name: "enterprise-rag-mcp"
+  version: "0.1.0"
+  env: "${APP_ENV:-dev}" # dev | staging | prod
+  timezone: "Asia/Shanghai"
+
+# -----------------------------------------------------------------------------
+# 向量库：Qdrant
+# -----------------------------------------------------------------------------
+vector_store:
+  provider: "qdrant"
+  # 必须用 127.0.0.1 而不是 localhost：本机 Python 解析 localhost 会先尝试 IPv6 ::1，
+  # 在 Qdrant 只监听 IPv4 的情况下每次请求都要等约 2 秒超时才回退 IPv4。
+  # 实测差距：QdrantClient(localhost).get_collections() = 2045ms，
+  #           QdrantClient(127.0.0.1).get_collections() = 1.0ms。
+  host: "${QDRANT_HOST:-127.0.0.1}"
+  port: 6333
+  grpc_port: 6334
+  prefer_grpc: false
+  api_key: "${QDRANT_API_KEY:-}" # 本地 docker 默认为空
+  timeout: 30 # 秒
+  collection: "enterprise_docs"
+  # 向量参数必须与 embedding.dimension 严格一致，否则写入时 Qdrant 会直接报错
+  distance: "Cosine" # Cosine | Dot | Euclid
+  hnsw:
+    m: 16
+    ef_construct: 128
+  # 写入使用的 payload 索引字段（用于 metadata 过滤，避免全量扫描）
+  payload_indexes:
+    - "doc_id"
+    - "source"
+    - "file_hash"
+    - "page"
+
+# -----------------------------------------------------------------------------
+# 嵌入模型：可插拔 provider（OpenAI 兼容协议）
+# -----------------------------------------------------------------------------
+# 说明（重要）：
+#   DeepSeek 官方 API 目前只提供 chat/completions，并未开放文本嵌入（embedding）接口，
+#   不存在名为 "DeepSeek V4.1 embedding" 的可用模型。因此这里采用"能力位预留 + 可插拔"
+#   设计：抽象层统一走 OpenAI 兼容的 /v1/embeddings 协议，
+#     - provider: local  → 本地 sentence-transformers 推理（默认，可完全离线）
+#     - provider: openai_compatible → 任意兼容 /v1/embeddings 的服务
+#   一旦 DeepSeek 发布 embedding 接口，只改下面 3 行（provider/base_url/model），
+#   rag_pipeline 与 backend 代码零改动。
+embedding:
+  provider: "${EMBEDDING_PROVIDER:-local}" # local | openai_compatible
+  model: "${EMBEDDING_MODEL:-BAAI/bge-m3}"
+  dimension: 1024 # 必须与所选模型实际输出维度一致
+  normalize: true # L2 归一化，配合 Cosine 距离
+  batch_size: 32
+  max_length: 8192 # 单条文本最大 token 数，超出由 document_parser 在分块阶段截断
+  device: "${EMBEDDING_DEVICE:-cpu}" # cpu | cuda
+  # 必须与 HF_HOME 指向同一目录：CacheFolder 与 HF_HOME 不一致会导致
+  # "已有完整缓存却重新下载"（若旧缓存残缺，还会撞上受限目录的权限错误）。
+  cache_dir: "./.cache/huggingface"
+
+  # 预留的 DeepSeek 嵌入通道（默认注释关闭；官方开放接口后启用）
+  # provider: "openai_compatible"
+  # base_url: "https://api.deepseek.com/v1"
+  # model: "deepseek-embedding-v1"
+  # api_key: "${DEEPSEEK_API_KEY:-}"
+  # dimension: 1024
+
+  # 本地嵌入时的降级备选模型（bge-m3 下载失败时改用它，维度需同步改为 768）
+  fallback:
+    model: "BAAI/bge-base-zh-v1.5"
+    dimension: 768
+
+# -----------------------------------------------------------------------------
+# LLM：Agent 编排 / 意图识别 / 回答生成
+# -----------------------------------------------------------------------------
+llm:
+  provider: "deepseek"
+  base_url: "${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}"
+  api_key: "${DEEPSEEK_API_KEY:-}"
+  model: "${DEEPSEEK_MODEL:-deepseek-chat}"
+  temperature: 0.1 # Agent 场景要稳定，低温度
+  max_tokens: 2048
+  timeout: 60
+  max_retries: 2
+  # 阶段4中"工具调用失败后自动重试1次"的独立开关
+  tool_call_retry: 1
+
+# -----------------------------------------------------------------------------
+# 文档摄取与分块
+# -----------------------------------------------------------------------------
+ingestion:
+  chunk_size: 512
+  chunk_overlap: 64
+  supported_extensions: [".pdf", ".md", ".markdown", ".txt"]
+  index_batch_size: 100
+  docs_dir: "./docs"
+  state_file: "./.state/ingestion_state.json" # 增量索引：file_hash -> 已索引记录
+
+# -----------------------------------------------------------------------------
+# MCP server 注册表
+# -----------------------------------------------------------------------------
+# enabled: 全局开关；tools[].enabled: 单工具开关。registry.py 依此装配工具表。
+mcp:
+  protocol_version: "2024-11-05"
+  client_name: "enterprise-rag-mcp-client"
+  client_version: "0.1.0"
+  call_timeout: 30 # 单次工具调用超时（秒）
+  servers:
+    - name: "knowledge_base"
+      enabled: true
+      description: "企业知识库检索：向量+关键词混合检索、文档元数据查询"
+      transport: "stdio"
+      command: "python"
+      args: ["-m", "mcp_servers.knowledge_base.server"]
+      cwd: "."
+      env:
+        # 必须与顶层 vector_store.host 一致用 127.0.0.1：这里的环境变量会覆盖
+        # 子进程读到的配置，若写成 localhost 则每次 Qdrant 请求多吃约 2 秒
+        # IPv6 超时（实测：search_documents 6.2s -> 应降到亚秒级）。
+        QDRANT_HOST: "${QDRANT_HOST:-127.0.0.1}"
+        QDRANT_PORT: "6333"
+        KB_COLLECTION: "enterprise_docs"
+      tools:
+        - name: "search_documents"
+          enabled: true
+          description: "在企业知识库中检索与 query 相关的文档片段"
+        - name: "get_document_metadata"
+          enabled: true
+          description: "按 doc_id 查询文档的元数据（标题、来源、页数、创建时间等）"
+
+    - name: "business_db"
+      enabled: true
+      description: "业务数据库：订单查询、工单创建"
+      transport: "stdio"
+      command: "python"
+      args: ["-m", "mcp_servers.business_db.server"]
+      cwd: "."
+      env:
+        BIZ_DB_PATH: "./.data/business.db"
+      tools:
+        - name: "query_orders"
+          enabled: true
+          description: "按客户 ID 与日期范围查询订单"
+        - name: "create_ticket"
+          enabled: true
+          description: "创建客服/运维工单，返回工单号"
+
+# -----------------------------------------------------------------------------
+# API 服务
+# -----------------------------------------------------------------------------
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["http://localhost:3000", "http://127.0.0.1:3080"]
+  sse_heartbeat_seconds: 15
+  session:
+    db_path: "./.data/sessions.db"
+    max_turns: 10 # 每个 session 保留最近 10 轮对话
+
+# -----------------------------------------------------------------------------
+# 可观测性 / 日志
+# -----------------------------------------------------------------------------
+observability:
+  log_dir: "./logs"
+  structured_log_file: "./logs/tool_calls.jsonl" # 阶段4：{timestamp, tool, args, result, latency_ms}
+  request_log_file: "./logs/requests.jsonl" # 阶段5：token / latency 用量
+  level: "INFO"
+  log_prompts: false # 生产环境默认不落盘原始 prompt，避免 PII 泄露
+
+# -----------------------------------------------------------------------------
+# 评测
+# -----------------------------------------------------------------------------
+eval:
+  test_cases_file: "./eval/test_cases.json"
+  report_file: "./eval/eval_report.md"
+  concurrency: 2
+  metrics: ["intent_accuracy", "tool_selection_accuracy", "answer_contains_rate", "e2e_latency"]

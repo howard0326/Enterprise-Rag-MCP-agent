@@ -1,0 +1,796 @@
+{
+  "meta": {
+    "started_at": "2026-09-22T19:11:49+08:00",
+    "finished_at": "2026-09-22T19:12:47+08:00",
+    "total": 20,
+    "llm_configured": true,
+    "model": "deepseek-chat",
+    "intent_accuracy": 1.0,
+    "tool_selection_accuracy": 1.0,
+    "answer_contains_rate": 1.0,
+    "passed_rate": 1.0,
+    "latency": {
+      "mean": 2128.873,
+      "p50": 2222.3050000000003,
+      "p95": 2732.3,
+      "max": 3002.94,
+      "min": 1228.87
+    },
+    "failure_histogram": {}
+  },
+  "results": [
+    {
+      "id": "KB-01",
+      "category": "knowledge_qa",
+      "input": "退货政策是什么？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "7 个自然日",
+        "无理由退货",
+        "签收"
+      ],
+      "hit_contains": [
+        "7 个自然日",
+        "无理由退货",
+        "签收"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2495.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 608,
+      "exception": ""
+    },
+    {
+      "id": "KB-02",
+      "category": "knowledge_qa",
+      "input": "无理由退货的期限是多久？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "7 个自然日",
+        "15 个自然日"
+      ],
+      "hit_contains": [
+        "7 个自然日",
+        "15 个自然日"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2326.8,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 410,
+      "exception": ""
+    },
+    {
+      "id": "KB-03",
+      "category": "knowledge_qa",
+      "input": "退款一般多久到账？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "3~5 个工作日",
+        "质检",
+        "工作日"
+      ],
+      "hit_contains": [
+        "3~5 个工作日",
+        "质检",
+        "工作日"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2225.7,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 520,
+      "exception": ""
+    },
+    {
+      "id": "KB-04",
+      "category": "knowledge_qa",
+      "input": "工单优先级 urgent 的响应时限是多久？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "rule",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "15 分钟",
+        "urgent",
+        "4 小时"
+      ],
+      "hit_contains": [
+        "15 分钟",
+        "urgent",
+        "4 小时"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2222.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 216,
+      "exception": ""
+    },
+    {
+      "id": "KB-05",
+      "category": "knowledge_qa",
+      "input": "创建工单必须填写哪些信息？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "标题",
+        "描述",
+        "优先级"
+      ],
+      "hit_contains": [
+        "标题",
+        "描述",
+        "优先级"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2424.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 634,
+      "exception": ""
+    },
+    {
+      "id": "KB-06",
+      "category": "knowledge_qa",
+      "input": "哪些商品不支持退货？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "定制",
+        "数字",
+        "拆封"
+      ],
+      "hit_contains": [
+        "定制",
+        "数字",
+        "拆封"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2222.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 297,
+      "exception": ""
+    },
+    {
+      "id": "KB-07",
+      "category": "knowledge_qa",
+      "input": "已签收的订单要退货应该走什么流程？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "退货申请",
+        "delivered",
+        "签收"
+      ],
+      "hit_contains": [
+        "退货申请",
+        "delivered",
+        "签收"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2732.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 737,
+      "exception": ""
+    },
+    {
+      "id": "KB-08",
+      "category": "knowledge_qa",
+      "input": "退款率是怎么计算的？",
+      "expected_intent": [
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "rule",
+      "expected_tool": [
+        "search_documents"
+      ],
+      "actual_tools": [
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "refunded",
+        "退款率",
+        "订单"
+      ],
+      "hit_contains": [
+        "refunded",
+        "退款率",
+        "订单"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2224.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 316,
+      "exception": ""
+    },
+    {
+      "id": "DB-01",
+      "category": "data_query",
+      "input": "查一下 CUST-1001 的所有订单。",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "ORD-001",
+        "ORD-002",
+        "ORD-007"
+      ],
+      "hit_contains": [
+        "ORD-001",
+        "ORD-002",
+        "ORD-007"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2191.5,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 316,
+      "exception": ""
+    },
+    {
+      "id": "DB-02",
+      "category": "data_query",
+      "input": "订单 ORD-001 现在是什么状态？",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "delivered",
+        "ORD-001",
+        "签收"
+      ],
+      "hit_contains": [
+        "delivered",
+        "ORD-001",
+        "签收"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1808.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 157,
+      "exception": ""
+    },
+    {
+      "id": "DB-03",
+      "category": "data_query",
+      "input": "ORD-001 的订单金额是多少？",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "299",
+        "CNY"
+      ],
+      "hit_contains": [
+        "299",
+        "CNY"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1307.3,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 155,
+      "exception": ""
+    },
+    {
+      "id": "DB-04",
+      "category": "data_query",
+      "input": "CUST-1002 有哪些订单？",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "ORD-003",
+        "ORD-004"
+      ],
+      "hit_contains": [
+        "ORD-003",
+        "ORD-004"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1606.8,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 199,
+      "exception": ""
+    },
+    {
+      "id": "DB-05",
+      "category": "data_query",
+      "input": "CUST-1001 在 2025 年 3 月的订单有哪些？",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "ORD-001",
+        "ORD-002"
+      ],
+      "hit_contains": [
+        "ORD-001",
+        "ORD-002"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1811.2,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 390,
+      "exception": ""
+    },
+    {
+      "id": "DB-06",
+      "category": "data_query",
+      "input": "哪些订单已经退款了？",
+      "expected_intent": [
+        "data_query"
+      ],
+      "actual_intents": [
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders"
+      ],
+      "actual_tools": [
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "refunded",
+        "ORD-003",
+        "ORD-007"
+      ],
+      "hit_contains": [
+        "refunded"
+      ],
+      "missed_contains": [
+        "ORD-003",
+        "ORD-007"
+      ],
+      "contains_ok": true,
+      "latency_ms": 1679.1,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 301,
+      "exception": ""
+    },
+    {
+      "id": "MIX-01",
+      "category": "mixed",
+      "input": "订单 ORD-001 符合退货政策吗？",
+      "expected_intent": [
+        "data_query",
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "data_query",
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders",
+        "search_documents"
+      ],
+      "actual_tools": [
+        "query_orders",
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "delivered",
+        "7 个自然日",
+        "签收"
+      ],
+      "hit_contains": [
+        "delivered",
+        "签收"
+      ],
+      "missed_contains": [
+        "7 个自然日"
+      ],
+      "contains_ok": true,
+      "latency_ms": 3002.9,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 757,
+      "exception": ""
+    },
+    {
+      "id": "MIX-02",
+      "category": "mixed",
+      "input": "ORD-001 已经签收了，我还能退货吗？需要满足什么条件？",
+      "expected_intent": [
+        "data_query",
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "knowledge_qa",
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders",
+        "search_documents"
+      ],
+      "actual_tools": [
+        "query_orders",
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "退货申请",
+        "包装",
+        "发票"
+      ],
+      "hit_contains": [
+        "退货申请",
+        "包装",
+        "发票"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2614.4,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 735,
+      "exception": ""
+    },
+    {
+      "id": "MIX-03",
+      "category": "mixed",
+      "input": "CUST-1003 的订单里有没有在退货期限内的？",
+      "expected_intent": [
+        "data_query",
+        "knowledge_qa"
+      ],
+      "actual_intents": [
+        "data_query",
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "query_orders",
+        "search_documents"
+      ],
+      "actual_tools": [
+        "query_orders",
+        "search_documents"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "CUST-1003",
+        "ORD-005",
+        "个自然日"
+      ],
+      "hit_contains": [
+        "CUST-1003",
+        "ORD-005",
+        "个自然日"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2430.1,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 603,
+      "exception": ""
+    },
+    {
+      "id": "ACT-01",
+      "category": "action_request",
+      "input": "帮我给订单 ORD-001 创建一个高优先级工单，退款一直没到账。",
+      "expected_intent": [
+        "action_request"
+      ],
+      "actual_intents": [
+        "action_request",
+        "data_query",
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "rule",
+      "expected_tool": [
+        "create_ticket",
+        "query_orders"
+      ],
+      "actual_tools": [
+        "create_ticket",
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "TKT-",
+        "high",
+        "ORD-001"
+      ],
+      "hit_contains": [
+        "TKT-",
+        "high",
+        "ORD-001"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 2096.1,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 412,
+      "exception": ""
+    },
+    {
+      "id": "ACT-02",
+      "category": "action_request",
+      "input": "客户反馈 ORD-004 一直没发货，麻烦建个紧急工单催一下。",
+      "expected_intent": [
+        "action_request"
+      ],
+      "actual_intents": [
+        "action_request",
+        "data_query"
+      ],
+      "intent_ok": true,
+      "intent_source": "llm",
+      "expected_tool": [
+        "create_ticket",
+        "query_orders"
+      ],
+      "actual_tools": [
+        "create_ticket",
+        "query_orders"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "TKT-",
+        "urgent",
+        "ORD-004"
+      ],
+      "hit_contains": [
+        "TKT-",
+        "urgent",
+        "ORD-004"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1927.5,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 659,
+      "exception": ""
+    },
+    {
+      "id": "ACT-03",
+      "category": "action_request",
+      "input": "请为 CUST-1002 的订单问题登记一个工单。",
+      "expected_intent": [
+        "action_request"
+      ],
+      "actual_intents": [
+        "action_request",
+        "data_query",
+        "knowledge_qa"
+      ],
+      "intent_ok": true,
+      "intent_source": "rule",
+      "expected_tool": [
+        "create_ticket"
+      ],
+      "actual_tools": [
+        "create_ticket"
+      ],
+      "tool_ok": true,
+      "expected_contains": [
+        "TKT-",
+        "CUST-1002"
+      ],
+      "hit_contains": [
+        "TKT-",
+        "CUST-1002"
+      ],
+      "missed_contains": [],
+      "contains_ok": true,
+      "latency_ms": 1228.9,
+      "degraded": false,
+      "tool_error": false,
+      "failure_types": [],
+      "answer_chars": 171,
+      "exception": ""
+    }
+  ]
+}
