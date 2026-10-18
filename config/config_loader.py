@@ -241,12 +241,18 @@ class LLMConfig(BaseModel):
     provider: str = "deepseek"
     base_url: str = "https://api.deepseek.com/v1"
     api_key: str = ""
-    model: str = "deepseek-chat"
+    # 2026-10 起官方只接受 deepseek-flash / deepseek-v4-pro；
+    # 旧名 deepseek-chat 仅作兼容别名且已公告停用。
+    model: str = "deepseek-flash"
     temperature: float = Field(default=0.1, ge=0.0, le=2.0)
     max_tokens: int = Field(default=2048, ge=1)
     timeout: int = Field(default=60, ge=1)
     max_retries: int = Field(default=2, ge=0, le=5)
     tool_call_retry: int = Field(default=1, ge=0, le=3)
+    # 分类类任务（意图识别/参数抽取）是否关闭思考模式。
+    # V4 默认开启思考，短 max_tokens 下 content 会为空（实测），
+    # 而分类任务不需要推理，关闭后 output token 从 72 降到 1。
+    classification_thinking: bool = False
 
     @property
     def is_configured(self) -> bool:

@@ -50,6 +50,62 @@
 
 ![评测指标](docs/images/06-eval-metrics.png)
 
+## 3.1 2026-10 生态迁移（已实测完成）
+
+距初版一个月，生态有两处变化**直接影响了可用性**，已修复并复验：
+
+### ① 模型名：`deepseek-chat` → `deepseek-flash`
+
+官方 [V4 公告](https://api-docs.deepseek.com/zh-cn/news/news260424/) 明确旧名
+`deepseek-chat` / `deepseek-reasoner` **于 2026-07-24 停用**。实测调用 API 的报错直接给出合法名单：
+
+```
+The supported API model names are deepseek-flash, deepseek-v4-pro
+```
+
+> 文档里提到的 `deepseek-v4.1-flash` 实测返回 **400** —— 所以**以 API 报错信息为准，不要照抄文档**。
+
+**踩到的坑**：`.env` 里显式写了 `DEEPSEEK_MODEL=deepseek-chat`，环境变量优先级高于
+`${DEEPSEEK_MODEL:-deepseek-flash}` 默认值，导致改了配置**却不生效**（`/health` 仍显示旧名）。
+教训：同一个值不要在两处可配，`.env` 只放密钥。
+
+### ② 思考模式吃 token 导致空响应（旧 bug 的真根因）
+
+V4 系列**默认开启思考模式**，`completion_tokens` 里有一大块 `reasoning_tokens`。实测：
+
+| 配置 | completion | reasoning | content |
+| --- | --- | --- | --- |
+| 默认思考 + `max_tokens=16` | 16 | **16** | **空** |
+| 默认思考 + `max_tokens=64` | 24 | 22 | "可用" |
+| `thinking: disabled` | **1** | 0 | "可用" |
+
+这解释了此前"意图识别偶发返回空内容、退回规则路径"的真正原因。修复：新增
+`llm.classification_thinking: false`，意图分类显式传 `{"thinking":{"type":"disabled"}}`，
+output token 从 72 降到 **1**。
+
+### ③ MCP 规范升到 `2026-07-28`（暂不迁移，已标注为技术债）
+
+新规范核心是**去会话化**：移除 `initialize` 握手与协议级会话、新增 `server/discover`、
+结果必须带 `resultType`（[changelog](https://modelcontextprotocol.io/specification/2026-07-28/changelog)）。
+这会让 `mcp_servers/registry.py` 的会话池设计变得不必要。
+
+**决策：暂不迁移**。现 SDK（`mcp 2.2.0`）实现的是 `2025-11-25`，自洽可跑；无状态改造
+等于重写阶段 3，性价比低。**主动标注为已知技术债，而不是假装不存在。**
+
+### 迁移后复验（2026-10-19）
+
+```
+模型      : deepseek-flash
+用例      : 20/20 全通过
+四项指标  : 意图 100% / 工具 100% / 包含 100% / 全通过 100%
+失败分布  : 无
+延迟      : 均值 2.85s / P50 2.78s / P95 4.06s / max 4.44s
+```
+
+> ⚠️ **延迟上升 34%（2.13s → 2.85s）是换模型的代价**：新模型在**回答生成**时默认
+> 开启思考，质量更好但更慢。后续可做**分级路由**：混合/推理类问题用思考，简单查询
+> 关闭思考，兼顾质量与延迟。
+
 ## 4. 架构与技术选型
 
 ```mermaid

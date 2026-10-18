@@ -455,9 +455,16 @@ class RAGMCPAgent:
         messages.append({"role": "user", "content": message})
 
         response = await self.llm.chat(
-            # 256 而非 128：实测 128 时 deepseek 偶尔返回空 content（推理 token 吃掉了
-            # 配额），导致意图识别被迫退回规则路径。规则兜底工作正常，但能走模型就走模型。
-            messages, json_mode=True, temperature=0.0, max_tokens=256
+            # 意图分类是确定性短任务，不需要推理链：
+            #   * 关闭思考模式（classification_thinking=false）—— 实测 V4 默认思考，
+            #     max_tokens=16 时 token 全花在 reasoning 上、content 为空，
+            #     关闭后 output token 从 72 降到 1，且不会再出现空响应；
+            #   * max_tokens 提到 256 作为双保险（万一服务端忽略 thinking 参数）。
+            messages,
+            json_mode=True,
+            temperature=0.0,
+            max_tokens=256,
+            thinking=self.llm.config.classification_thinking,
         )
         parsed = extract_json(response.content)
         raw_intents = parsed.get("intents")

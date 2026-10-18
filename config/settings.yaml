@@ -85,13 +85,23 @@ llm:
   provider: "deepseek"
   base_url: "${DEEPSEEK_BASE_URL:-https://api.deepseek.com/v1}"
   api_key: "${DEEPSEEK_API_KEY:-}"
-  model: "${DEEPSEEK_MODEL:-deepseek-chat}"
+  # 模型名说明（2026-10 实测）：
+  #   DeepSeek 官方目前只接受两个合法名：deepseek-flash 与 deepseek-v4-pro
+  #   （传 deepseek-v4.1-flash 会 400：The supported API model names are ...）。
+  #   旧名 deepseek-chat / deepseek-reasoner 虽仍可调用，但只是别名，
+  #   已公告于 2026-07-24 停用，新项目不要再写旧名。
+  #   deepseek-flash：快、便宜，适合分类/抽取；deepseek-v4-pro：推理强，适合复杂回答。
+  model: "${DEEPSEEK_MODEL:-deepseek-flash}"
   temperature: 0.1 # Agent 场景要稳定，低温度
   max_tokens: 2048
   timeout: 60
   max_retries: 2
   # 阶段4中"工具调用失败后自动重试1次"的独立开关
   tool_call_retry: 1
+  # 分类类任务（意图识别）是否关闭思考模式。
+  # 实测：V4 默认开启思考，max_tokens=16 时 16 个 token 全花在 reasoning 上、
+  # content 为空；关闭后 completion 从 72 降到 1。分类不需要推理，必须关。
+  classification_thinking: false
 
 # -----------------------------------------------------------------------------
 # 文档摄取与分块

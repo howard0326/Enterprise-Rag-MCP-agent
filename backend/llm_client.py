@@ -196,8 +196,22 @@ class LLMClient:
         temperature: float | None,
         max_tokens: int | None,
         stream: bool,
+        thinking: bool | None = None,
     ) -> dict[str, Any]:
         """构造请求体。
+
+        **关于 thinking 参数（重要，有实测依据）**：
+            DeepSeek V4 系列默认开启思考模式，``completion_tokens`` 里会有一大块
+            ``reasoning_tokens``。实测 ``max_tokens=16`` 时 16 个 token 全花在推理上，
+            ``content`` 直接为空 —— 这正是旧版本"意图识别偶发返回空内容"的根因。
+            实测对比（同一句"只回复两个字：可用"）::
+
+                默认思考 + max_tokens=16   -> content 空, completion=16, reasoning=16
+                默认思考 + max_tokens=64   -> content "可用", completion=24, reasoning=22
+                thinking=disabled          -> content "可用", completion=1,  reasoning=0
+
+            因此：**确定性的短任务（意图分类、参数抽取）应显式关闭思考**，
+            既避免空响应又省 99% 的 output token；需要推理的复杂回答保持默认。
 
         Args:
             messages: OpenAI 格式消息数组。
@@ -205,6 +219,7 @@ class LLMClient:
             temperature: 覆盖默认温度。
             max_tokens: 覆盖默认最大输出长度。
             stream: 是否流式。
+            thinking: ``True`` 强制思考 / ``False`` 关闭思考 / ``None`` 用服务端默认。
 
         Returns:
             请求体字典。
@@ -218,6 +233,9 @@ class LLMClient:
         }
         if json_mode:
             body["response_format"] = {"type": "json_object"}
+        if thinking is not None:
+            # 实测该字段在 deepseek-flash 与 deepseek-v4-pro 上均生效
+            body["thinking"] = {"type": "enabled" if thinking else "disabled"}
         return body
 
     async def chat(
@@ -227,6 +245,7 @@ class LLMClient:
         json_mode: bool = False,
         temperature: float | None = None,
         max_tokens: int | None = None,
+        thinking: bool | None = None,
     ) -> LLMResponse:
         """发起一次对话补全（非流式）。
 
@@ -250,7 +269,12 @@ class LLMClient:
 
         client = await self._get_client()
         body = self._payload(
-            messages, json_mode=json_mode, temperature=temperature, max_tokens=max_tokens, stream=False
+            messages,
+            json_mode=json_mode,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            stream=False,
+            thinking=thinking,
         )
         started = time.perf_counter()
         last_error: Exception | None = None

@@ -1,20 +1,20 @@
 {
   "meta": {
-    "started_at": "2026-09-22T19:11:49+08:00",
-    "finished_at": "2026-09-22T19:12:47+08:00",
+    "started_at": "2026-10-19T02:26:19+08:00",
+    "finished_at": "2026-10-19T02:27:34+08:00",
     "total": 20,
     "llm_configured": true,
-    "model": "deepseek-chat",
+    "model": "deepseek-flash",
     "intent_accuracy": 1.0,
     "tool_selection_accuracy": 1.0,
     "answer_contains_rate": 1.0,
     "passed_rate": 1.0,
     "latency": {
-      "mean": 2128.873,
-      "p50": 2222.3050000000003,
-      "p95": 2732.3,
-      "max": 3002.94,
-      "min": 1228.87
+      "mean": 2847.2555,
+      "p50": 2783.5699999999997,
+      "p95": 4064.74,
+      "max": 4435.2,
+      "min": 1608.4
     },
     "failure_histogram": {}
   },
@@ -50,11 +50,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2495.3,
+      "latency_ms": 3065.8,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 608,
+      "answer_chars": 587,
       "exception": ""
     },
     {
@@ -86,11 +86,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2326.8,
+      "latency_ms": 2615.8,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 410,
+      "answer_chars": 589,
       "exception": ""
     },
     {
@@ -124,11 +124,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2225.7,
+      "latency_ms": 3652.7,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 520,
+      "answer_chars": 714,
       "exception": ""
     },
     {
@@ -162,11 +162,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2222.3,
+      "latency_ms": 2431.2,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 216,
+      "answer_chars": 264,
       "exception": ""
     },
     {
@@ -177,10 +177,11 @@
         "knowledge_qa"
       ],
       "actual_intents": [
+        "action_request",
         "knowledge_qa"
       ],
       "intent_ok": true,
-      "intent_source": "llm",
+      "intent_source": "rule",
       "expected_tool": [
         "search_documents"
       ],
@@ -200,11 +201,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2424.3,
+      "latency_ms": 3136.9,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 634,
+      "answer_chars": 697,
       "exception": ""
     },
     {
@@ -238,11 +239,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2222.3,
+      "latency_ms": 2836.8,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 297,
+      "answer_chars": 271,
       "exception": ""
     },
     {
@@ -276,11 +277,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2732.3,
+      "latency_ms": 3040.4,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 737,
+      "answer_chars": 876,
       "exception": ""
     },
     {
@@ -294,7 +295,7 @@
         "knowledge_qa"
       ],
       "intent_ok": true,
-      "intent_source": "rule",
+      "intent_source": "llm",
       "expected_tool": [
         "search_documents"
       ],
@@ -314,11 +315,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2224.3,
+      "latency_ms": 2838.4,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 316,
+      "answer_chars": 464,
       "exception": ""
     },
     {
@@ -352,7 +353,7 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2191.5,
+      "latency_ms": 1608.4,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
@@ -390,11 +391,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1808.3,
+      "latency_ms": 2526.4,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 157,
+      "answer_chars": 244,
       "exception": ""
     },
     {
@@ -426,11 +427,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1307.3,
+      "latency_ms": 1813.6,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 155,
+      "answer_chars": 209,
       "exception": ""
     },
     {
@@ -462,7 +463,7 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1606.8,
+      "latency_ms": 1815.6,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
@@ -498,11 +499,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1811.2,
+      "latency_ms": 2163.2,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 390,
+      "answer_chars": 402,
       "exception": ""
     },
     {
@@ -537,11 +538,11 @@
         "ORD-007"
       ],
       "contains_ok": true,
-      "latency_ms": 1679.1,
+      "latency_ms": 2701.9,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 301,
+      "answer_chars": 263,
       "exception": ""
     },
     {
@@ -580,11 +581,11 @@
         "7 个自然日"
       ],
       "contains_ok": true,
-      "latency_ms": 3002.9,
+      "latency_ms": 3266.3,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 757,
+      "answer_chars": 811,
       "exception": ""
     },
     {
@@ -596,8 +597,8 @@
         "knowledge_qa"
       ],
       "actual_intents": [
-        "knowledge_qa",
-        "data_query"
+        "data_query",
+        "knowledge_qa"
       ],
       "intent_ok": true,
       "intent_source": "llm",
@@ -622,11 +623,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2614.4,
+      "latency_ms": 3771.2,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 735,
+      "answer_chars": 832,
       "exception": ""
     },
     {
@@ -664,11 +665,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2430.1,
+      "latency_ms": 4435.2,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 603,
+      "answer_chars": 894,
       "exception": ""
     },
     {
@@ -680,11 +681,10 @@
       ],
       "actual_intents": [
         "action_request",
-        "data_query",
-        "knowledge_qa"
+        "data_query"
       ],
       "intent_ok": true,
-      "intent_source": "rule",
+      "intent_source": "llm",
       "expected_tool": [
         "create_ticket",
         "query_orders"
@@ -706,11 +706,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 2096.1,
+      "latency_ms": 2430.2,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 412,
+      "answer_chars": 429,
       "exception": ""
     },
     {
@@ -722,7 +722,8 @@
       ],
       "actual_intents": [
         "action_request",
-        "data_query"
+        "data_query",
+        "knowledge_qa"
       ],
       "intent_ok": true,
       "intent_source": "llm",
@@ -747,11 +748,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1927.5,
+      "latency_ms": 4064.7,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 659,
+      "answer_chars": 734,
       "exception": ""
     },
     {
@@ -762,12 +763,10 @@
         "action_request"
       ],
       "actual_intents": [
-        "action_request",
-        "data_query",
-        "knowledge_qa"
+        "action_request"
       ],
       "intent_ok": true,
-      "intent_source": "rule",
+      "intent_source": "llm",
       "expected_tool": [
         "create_ticket"
       ],
@@ -785,11 +784,11 @@
       ],
       "missed_contains": [],
       "contains_ok": true,
-      "latency_ms": 1228.9,
+      "latency_ms": 2730.3,
       "degraded": false,
       "tool_error": false,
       "failure_types": [],
-      "answer_chars": 171,
+      "answer_chars": 268,
       "exception": ""
     }
   ]
